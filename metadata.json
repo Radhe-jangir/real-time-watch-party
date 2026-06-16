@@ -1,0 +1,12 @@
+{
+  "name": "Real-Time Watch Party",
+  "description": "A modern watch-party application to watch synchronized video streams, share screens, and communicate in real-time via chat, video, and voice.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "display-capture"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
