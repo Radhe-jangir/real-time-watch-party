@@ -1,20 +1,25 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Real Time Watch Party
 
-# Run and deploy your AI Studio app
+Watch videos with friends in real time.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/cfec56c3-19a7-44ae-ba48-75efa5c0c2d9
+- Real-time synchronization
+- Chat
+- Video calls
+- Screen sharing
+
+## Tech Stack
+
+- React
+- TypeScript
+- Socket.IO
+- Express
+- WebRTC
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+npm install
+npm run dev
+```
