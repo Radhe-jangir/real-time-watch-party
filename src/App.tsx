@@ -89,10 +89,15 @@ export default function App() {
     if (!myUser) return;
 
     // Connect to port 3000 (same as server host)
-    const socketInstance = io({
-      reconnectionDelayMax: 10000,
-      autoConnect: true
-    });
+    const socketInstance = io(
+  import.meta.env.VITE_SOCKET_URL ||
+    "https://watch-party-api-sa82.onrender.com",
+  {
+    reconnectionDelayMax: 10000,
+    autoConnect: true,
+    transports: ["websocket", "polling"],
+  }
+);
 
     setSocket(socketInstance);
 
