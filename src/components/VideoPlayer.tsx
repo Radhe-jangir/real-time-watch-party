@@ -332,24 +332,94 @@ export function VideoPlayer({
     if (!socket || !room) return;
 
     const handleStateBroadcast = (updatedRoom: Room) => {
-      if (videoType === "youtube") {
-        syncYoutubeToRoom();
-      } else if (videoType === "direct" || videoType === "local") {
-        syncHtml5ToRoom();
-      }
-    };
+  console.log("STATE BROADCAST RECEIVED:", updatedRoom);
 
-    const handleSeekBroadcast = ({ currentTime }: { currentTime: number }) => {
-      isSyncingFromSocket.current = true;
-      if (videoType === "youtube" && ytPlayerRef.current) {
-        ytPlayerRef.current.seekTo(currentTime, true);
-      } else if ((videoType === "direct" || videoType === "local") && videoRef.current) {
-        videoRef.current.currentTime = currentTime;
-      }
-      setTimeout(() => {
-        isSyncingFromSocket.current = false;
-      }, 400);
-    };
+  if (videoType === "youtube" && ytPlayerRef.current) {
+    isSyncingFromSocket.current = true;
+
+    let targetTime = updatedRoom.currentTime;
+
+    if (updatedRoom.playing) {
+      const elapsed =
+        (Date.now() - updatedRoom.lastUpdated) / 1000;
+      targetTime += elapsed;
+    }
+
+    const diff = Math.abs(
+      ytPlayerRef.current.getCurrentTime() - targetTime
+    );
+
+    if (diff > 1.5) {
+      ytPlayerRef.current.seekTo(targetTime, true);
+    }
+
+    if (updatedRoom.playing) {
+      ytPlayerRef.current.playVideo();
+    } else {
+      ytPlayerRef.current.pauseVideo();
+    }
+
+    setTimeout(() => {
+      isSyncingFromSocket.current = false;
+    }, 400);
+  }
+
+  if (
+    (videoType === "direct" || videoType === "local") &&
+    videoRef.current
+  ) {
+    isSyncingFromSocket.current = true;
+
+    let targetTime = updatedRoom.currentTime;
+
+    if (updatedRoom.playing) {
+      const elapsed =
+        (Date.now() - updatedRoom.lastUpdated) / 1000;
+      targetTime += elapsed;
+    }
+
+    const diff = Math.abs(
+      videoRef.current.currentTime - targetTime
+    );
+
+    if (diff > 1.5) {
+      videoRef.current.currentTime = targetTime;
+    }
+
+    if (updatedRoom.playing) {
+      videoRef.current.play().catch(() => {});
+    } else {
+      videoRef.current.pause();
+    }
+
+    setTimeout(() => {
+      isSyncingFromSocket.current = false;
+    }, 400);
+  }
+};
+
+    const handleSeekBroadcast = ({
+  currentTime,
+}: {
+  currentTime: number;
+}) => {
+  console.log("SEEK RECEIVED:", currentTime);
+
+  isSyncingFromSocket.current = true;
+
+  if (videoType === "youtube" && ytPlayerRef.current) {
+    ytPlayerRef.current.seekTo(currentTime, true);
+  } else if (
+    (videoType === "direct" || videoType === "local") &&
+    videoRef.current
+  ) {
+    videoRef.current.currentTime = currentTime;
+  }
+
+  setTimeout(() => {
+    isSyncingFromSocket.current = false;
+  }, 400);
+};
 
     socket.on("room:state_broadcast", handleStateBroadcast);
     socket.on("room:seek_broadcast", handleSeekBroadcast);
