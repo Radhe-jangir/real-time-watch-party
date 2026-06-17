@@ -377,6 +377,7 @@ export function useWebRTC({
         createWebcamPeer(member.socketId, amInitiator);
       }
     });
+    });
 
       // Handle incoming WebRTC signals
       socket.on("webrtc:signal", async ({ senderSocketId, signal }) => {

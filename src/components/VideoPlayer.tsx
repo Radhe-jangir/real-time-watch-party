@@ -147,31 +147,6 @@ export function VideoPlayer({
     };
   }, [resolvedStreamUrl]);
 
-  // 
-
-    
-
-      if (!room) return;
-
-      const canControl =
-        isHost || room.everyoneCanControl;
-
-      if (!canControl) {
-        return;
-      }
-      onStateChange: (event: any) => {
-        if (isSyncingFromSocket.current) return;
-
-        const playerState = event.data;
-        const canControl = isHost || room?.everyoneCanControl;
-        
-        
-    }
-  });
-};
-
-
-
 // 2. HTML5 native `<video>` control sync
 const syncHtml5ToRoom = () => {
   const video = videoRef.current;
@@ -259,7 +234,7 @@ useEffect(() => {
 
     
 
-    else if (
+    if (
       (videoType === "direct" || videoType === "local") &&
       videoRef.current
     ) {
@@ -328,7 +303,7 @@ return (
   <div className="w-full h-full bg-black/60 relative flex items-center justify-center rounded-3xl overflow-hidden aspect-video border border-white/10 shadow-2xl group z-10">
     {/* Player Frame views */}
     
-     : (videoType === "direct" || videoType === "local") && resolvedStreamUrl ? (
+     {(videoType === "direct" || videoType === "local") && resolvedStreamUrl ? (
       <video
         id="direct-video-player"
         ref={videoRef}
