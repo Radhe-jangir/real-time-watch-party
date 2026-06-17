@@ -342,11 +342,7 @@ return (
     ) : videoType === "iframe" && iframeUrl ? (
       <div className="w-full h-full absolute inset-0 bg-slate-950">
         <div className="relative w-full h-full overflow-hidden"></div>
-        <iframe
-          src={iframeUrl}
-          className="absolute inset-0 w-full h-full"
-          allowFullScreen
-        />
+        
       </div>
     ) : (
       <div className="flex flex-col items-center justify-center gap-3 p-8 text-center text-slate-400">

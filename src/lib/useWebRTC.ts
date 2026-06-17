@@ -128,7 +128,7 @@ export function useWebRTC({
       if (screenShareActive) {
         try {
           const stream = await navigator.mediaDevices.getDisplayMedia({
-            video: { displaySurface: "monitor", frameRate: 30 } as any,
+            video: true,
             audio: true
           });
 
@@ -376,6 +376,15 @@ export function useWebRTC({
         const amInitiator = socket.id! > member.socketId;
         createWebcamPeer(member.socketId, amInitiator);
       }
+      if (
+        screenShareActive &&
+        localScreenStreamRef.current
+      ) {
+        initiateScreenPeerConnection(
+          member.socketId,
+          localScreenStreamRef.current
+        );
+}
     });
     });
 
