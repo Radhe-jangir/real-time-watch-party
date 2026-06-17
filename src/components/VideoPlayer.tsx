@@ -360,6 +360,9 @@ export function VideoPlayer({
     if (!socket || !room) return;
 
     const handleStateBroadcast = (updatedRoom: Room) => {
+      if (isSyncingFromSocket.current) {
+  return;
+}
   console.log("STATE BROADCAST RECEIVED:", updatedRoom);
 
   if (videoType === "youtube" && ytPlayerRef.current) {
@@ -442,8 +445,28 @@ export function VideoPlayer({
       if (room?.playing) {
         ytPlayerRef.current.playVideo();
       }
+    }, 800);
+
+    setTimeout(() => {
       isSyncingFromSocket.current = false;
-    }, 500);
+    }, 1200);
+  }
+
+  else if (
+    (videoType === "direct" || videoType === "local") &&
+    videoRef.current
+  ) {
+    isSyncingFromSocket.current = true;
+
+    videoRef.current.currentTime = currentTime;
+
+    if (room?.playing) {
+      videoRef.current.play().catch(() => {});
+    }
+
+    setTimeout(() => {
+      isSyncingFromSocket.current = false;
+    }, 1000);
   }
 };
 
