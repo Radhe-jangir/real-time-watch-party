@@ -23,6 +23,7 @@ export function VideoPlayer({
   localVideoFile,
   onLocalFileSelect
 }: VideoPlayerProps) {
+  const seekMonitorRef = useRef<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoType, setVideoType] = useState<"youtube" | "direct" | "iframe" | "local" | "unsupported">("direct");
   const [youtubeId, setYoutubeId] = useState<string | null>(null);
@@ -191,7 +192,8 @@ export function VideoPlayer({
       const container = document.getElementById(ytElementId);
       if (!container) return;
       container.innerHTML = ""; // Clear existing child frames
-
+      
+      
       const playerDiv = document.createElement("div");
       playerDiv.id = "yt-player-target";
       container.appendChild(playerDiv);
@@ -212,6 +214,51 @@ export function VideoPlayer({
             if (!active) return;
             // Seek and start sync after frame is active
             syncYoutubeToRoom();
+            let lastTime = 0;
+            seekMonitorRef.current = window.setInterval(() => {
+  if (
+    !ytPlayerRef.current ||
+    isSyncingFromSocket.current ||
+    !room
+  ) {
+    return;
+  }
+
+  const canControl = isHost || room.everyoneCanControl;
+  if (!canControl) return;
+
+  const currentTime = ytPlayerRef.current.getCurrentTime();
+
+  if (
+    Math.abs(currentTime - room.currentTime) > 5 &&
+    room.playing
+  ) {
+    console.log("SEEK DETECTED", currentTime);
+    onSeek(currentTime);
+  }
+}, 1000);
+setInterval(() => {
+  if (
+    !ytPlayerRef.current ||
+    isSyncingFromSocket.current ||
+    !room
+  ) {
+    return;
+  }
+
+  const canControl = isHost || room.everyoneCanControl;
+  if (!canControl) return;
+
+  const currentTime = ytPlayerRef.current.getCurrentTime();
+
+  // Detect manual seek
+  if (Math.abs(currentTime - lastTime) > 2) {
+    console.log("YOUTUBE SEEK DETECTED:", currentTime);
+    onSeek(currentTime);
+  }
+
+  lastTime = currentTime;
+}, 1000);
           },
           onStateChange: (event: any) => {
             if (isSyncingFromSocket.current) return;
