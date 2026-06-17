@@ -16,9 +16,7 @@ interface ControlsProps {
 // Open-source public streams for easy watch-party instant testing
 const QUICK_PRESETS = [
   { name: "Sintel Trailer (MP4)", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" },
-  { name: "Big Buck Bunny (MP4)", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
-  { name: "Lofi Beats Chillout (YT)", url: "https://www.youtube.com/watch?v=jfKfPfyJRdk" },
-  { name: "Synthwave Visuals (YT)", url: "https://www.youtube.com/watch?v=aqz-KE-bpKQ" }
+  { name: "Big Buck Bunny (MP4)", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" }
 ];
 
 export function Controls({

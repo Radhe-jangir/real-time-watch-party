@@ -68,7 +68,7 @@ io.on("connection", (socket: Socket) => {
         id: roomId,
         hostId: socket.id,
         everyoneCanControl: false,
-        videoUrl: "https://www.youtube.com/watch?v=aqz-KE-bpKQ", // Default starter video
+        videoUrl: "", // Default starter video
         playing: false,
         currentTime: 0,
         lastUpdated: Date.now(),

@@ -369,16 +369,18 @@ export function useWebRTC({
 
       // Ensure we have webcam peer connections for everyone
       members.forEach(member => {
-        if (member.socketId !== socket.id && !peersRef.current[member.socketId]) {
-          // If we are already in, setup a webcam peer. Existing users initiate, new users listen.
-          createWebcamPeer(member.socketId, true);
-        }
-      });
+        if (
+            member.socketId !== socket.id &&
+            !peersRef.current[member.socketId]
+      ) {
+        const amInitiator = socket.id! > member.socketId;
+        createWebcamPeer(member.socketId, amInitiator);
+      }
     });
 
-    // Handle incoming WebRTC signals
-    socket.on("webrtc:signal", async ({ senderSocketId, signal }) => {
-      const channel = signal.channel || "webcam";
+      // Handle incoming WebRTC signals
+      socket.on("webrtc:signal", async ({ senderSocketId, signal }) => {
+        const channel = signal.channel || "webcam";
 
       if (signal.type === "offer") {
         try {
