@@ -270,8 +270,8 @@ export default function App() {
     
     // Re-connect a new slot if user re-enters later
     if (myUser) {
-      const socketInstance = io();
-      setSocket(socketInstance);
+      
+      // setSocket(socketInstance);
     }
   };
 
