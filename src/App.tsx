@@ -268,11 +268,7 @@ export default function App() {
     // Clear URL query params
     window.history.pushState({}, "", window.location.pathname);
     
-    // Re-connect a new slot if user re-enters later
-    if (myUser) {
-      
-      // setSocket(socketInstance);
-    }
+   
   };
 
   // 5. Playback events dispatcher

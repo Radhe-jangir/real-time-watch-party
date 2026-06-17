@@ -360,9 +360,6 @@ export function VideoPlayer({
     if (!socket || !room) return;
 
     const handleStateBroadcast = (updatedRoom: Room) => {
-      if (isSyncingFromSocket.current) {
-  return;
-}
   console.log("STATE BROADCAST RECEIVED:", updatedRoom);
 
   if (videoType === "youtube" && ytPlayerRef.current) {
@@ -442,10 +439,10 @@ export function VideoPlayer({
     ytPlayerRef.current.seekTo(currentTime, true);
 
     setTimeout(() => {
-      if (room?.playing) {
-        ytPlayerRef.current.playVideo();
-      }
-    }, 800);
+  try {
+    ytPlayerRef.current?.playVideo();
+  } catch {}
+}, 800);
 
     setTimeout(() => {
       isSyncingFromSocket.current = false;
